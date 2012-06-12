@@ -1,4 +1,4 @@
-"" General settings
+" General settings
 set nocompatible                " choose no compatibility with legacy vi
 syntax enable
 set showcmd                     " display incomplete commands
@@ -8,8 +8,9 @@ set hidden                      " Maintain scroll position (don't close buffer)
 
 "" Whitespace
 set nowrap                      " don't wrap lines
-set tabstop=2 shiftwidth=2      " a tab is two spaces (or set this to 4)
-set expandtab                   " use spaces, not tabs (optional)
+set tabstop=4 shiftwidth=4      " a tab is two spaces (or set this to 4)
+set smarttab
+"set expandtab                   " use spaces, not tabs (optional)
 set backspace=indent,eol,start  " backspace through everything in insert mode
 
 "" Searching
@@ -17,6 +18,10 @@ set hlsearch                    " highlight matches
 set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
+
+"" Misc shortcuts
+let mapleader =","
+
 
 "" Pathogen
 call pathogen#infect()
@@ -79,6 +84,8 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <leader>w :vsplit<cr>  " Split pane vertically
+nnoremap <leader>h :split<cr>   " Split pane horizon
+nnoremap <leader>q :q<cr>       " Close current window
 
 "" Wild stuff
 set wildmenu                      " Enhanced command line completion.
@@ -93,32 +100,26 @@ cnoremap %% <C-R>=expand('%:h').'/'<cr>
 "highlight ExtraWhitespace ctermbg=red guibg=red
 "match ExtraWhitespace /\s\+$/
 
-"" Misc shortcuts
-let mapleader = ","
-let g:mapleader = ","
-" Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
-nmap <M-j> mz:m+<cr>`z                      
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
 "" Autocmd
-autocmd! bufwritepost _vimrc :source $VIM/_vimrc 
 
-
+if has("gui_mac") || has("gui_macvim")
+	autocmd! bufwritepost .vimrc :source ~/.vimrc      " for mac macvim 
+else
+	autocmd! bufwritepost _vimrc :source $VIM/_vimrc 	" for windows gvim 
+endif
 
 " Statusline
 set laststatus=2
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{CurDir()}%h\ \ \ Line:\ %l/%L:%c  
 function! CurDir()
-    let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
-    return curdir
+  let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
+  return curdir
 endfunction
 
 function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    else
-        return ''
-    endif
+  if &paste
+      return 'PASTE MODE  '
+  else
+      return ''
+  endif
 endfunction
